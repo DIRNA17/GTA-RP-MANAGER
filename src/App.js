@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { createClient } from '@supabase/supabase-js';
-import { DollarSign, Package, Users, Moon, Sun, LogOut, Save, History, Settings } from 'lucide-react';
+import { DollarSign, Package, Users, Moon, Sun, LogOut, History } from 'lucide-react';
 
 const GTARPManager = () => {
   const [currentPage, setCurrentPage] = useState('comptabilite');
@@ -59,12 +59,15 @@ const GTARPManager = () => {
     }
   };
 
-  // Google Sheets: you should call a server-side endpoint that uses googleapis to
-  // authenticate with a service account and append rows to a sheet. This client
-  // function is a placeholder which calls your server endpoint.
+  /* Google Sheets integration - TODO: Implement when backend is ready
+   * This function will be used to sync transactions with Google Sheets via a server endpoint
+   * Required env: REACT_APP_GOOGLE_SHEETS_ENDPOINT
+   * Example usage:
+   *   await sendToGoogleSheets({ date: trans.date, amount: trans.montant, type: trans.type });
+   */
+  // eslint-disable-next-line no-unused-vars
   const sendToGoogleSheets = async (rowData) => {
     try {
-      // Example: POST to your serverless function which will use googleapis
       await axios.post(process.env.REACT_APP_GOOGLE_SHEETS_ENDPOINT || '/api/sheets', { row: rowData });
     } catch (err) {
       console.error('Erreur Google Sheets:', err);
@@ -78,10 +81,10 @@ const GTARPManager = () => {
       const data = JSON.parse(savedData);
       setSolde(data.solde || 50000);
       setHistorique(data.historique || []);
-      setInventaire(data.inventaire || inventaire);
-      setClients(data.clients || clients);
+      setInventaire(prev => data.inventaire || prev);
+      setClients(prev => data.clients || prev);
     }
-  }, []);
+  }, []); // Vide car on veut juste charger au montage, et on utilise des updaters fonctionnels
 
   // Sauvegarder automatiquement
   useEffect(() => {
