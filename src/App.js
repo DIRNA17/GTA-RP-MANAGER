@@ -512,7 +512,7 @@ const GTARPManager = () => {
             {/* MODULE INVENTAIRE */}
             {currentPage === 'inventaire' && (
               <div className="space-y-6">
-                <div className={`p-6 rounded-2xl backdrop-blur-md ${
+                <div className={`p-6 rounded-2xl card backdrop-blur-md ${
                   isDarkMode 
                     ? 'bg-gray-800/40 border border-gray-700/50'
                     : 'bg-white/60 border border-gray-300/50'
@@ -654,7 +654,7 @@ const GTARPManager = () => {
                   ))}
                 </div>
 
-                <div className={`p-6 rounded-2xl backdrop-blur-md ${
+                <div className={`p-6 rounded-2xl card backdrop-blur-md ${
                   isDarkMode 
                     ? 'bg-gradient-to-br from-purple-900/30 to-blue-900/30 border border-purple-500/30'
                     : 'bg-gradient-to-br from-purple-100 to-blue-100 border border-purple-300'
@@ -672,7 +672,7 @@ const GTARPManager = () => {
             {/* MODULE CLIENTS */}
             {currentPage === 'clients' && (
               <div className="space-y-6">
-                <div className={`p-6 rounded-2xl backdrop-blur-md ${
+                <div className={`p-6 rounded-2xl card backdrop-blur-md ${
                   isDarkMode 
                     ? 'bg-gray-800/40 border border-gray-700/50'
                     : 'bg-white/60 border border-gray-300/50'
@@ -813,7 +813,7 @@ const GTARPManager = () => {
                   ))}
                 </div>
 
-                <div className={`p-6 rounded-2xl backdrop-blur-md ${
+                <div className={`p-6 rounded-2xl card backdrop-blur-md ${
                   isDarkMode 
                     ? 'bg-gradient-to-br from-blue-900/30 to-purple-900/30 border border-blue-500/30'
                     : 'bg-gradient-to-br from-blue-100 to-purple-100 border border-blue-300'
