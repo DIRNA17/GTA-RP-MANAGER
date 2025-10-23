@@ -27,7 +27,7 @@
     "eject": "react-scripts eject"
   },
   "overrides": {
-    "node-domexception": "domexception@2.0.1"
+    "node-domexception": "npm:domexception@2.0.1"
   },
   "eslintConfig": {
     "extends": [
