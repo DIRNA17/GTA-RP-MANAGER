@@ -2,9 +2,6 @@
   "name": "gta-rp-manager",
   "version": "0.1.0",
   "private": true,
-  "engines": {
-    "node": "22.x"
-  },
   "dependencies": {
     "@supabase/supabase-js": "^2.76.1",
     "@testing-library/dom": "^9.3.4",
@@ -13,6 +10,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.12.2",
     "googleapis": "^164.1.0",
+  "domexception": "^2.0.1",
     "lucide-react": "^0.546.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -24,6 +22,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
+  },
+  "overrides": {
+    "node-domexception": "domexception@2.0.1"
   },
   "eslintConfig": {
     "extends": [
