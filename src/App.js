@@ -221,7 +221,7 @@ const GTARPManager = () => {
   if (!isLoggedIn) {
     return (
       <div className={`min-h-screen flex items-center justify-center ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
-        <div className={`w-full max-w-md p-8 rounded-2xl backdrop-blur-md ${
+        <div className={`w-full max-w-md p-8 card ${
           isDarkMode 
             ? 'bg-gray-800/40 border border-gray-700/50 shadow-2xl shadow-purple-500/20' 
             : 'bg-white/60 border border-gray-300/50 shadow-xl'
@@ -272,7 +272,7 @@ const GTARPManager = () => {
 
             <button
               type="submit"
-              className="w-full py-3 rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold hover:from-purple-700 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-purple-500/50"
+              className="btn-primary w-full font-semibold"
             >
               Se connecter
             </button>
@@ -313,28 +313,29 @@ const GTARPManager = () => {
               GTA RP Manager
             </h1>
             
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => setIsDarkMode(!isDarkMode)}
-                className={`p-2 rounded-lg ${
-                  isDarkMode ? 'bg-gray-700/50 text-gray-300' : 'bg-gray-200 text-gray-700'
-                } hover:opacity-80 transition-opacity`}
-              >
-                {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-              </button>
+                <div className="flex items-center gap-4">
+                  <button
+                    onClick={() => setIsDarkMode(!isDarkMode)}
+                    className={`p-2 rounded-lg ${
+                      isDarkMode ? 'bg-gray-700/50 text-gray-300' : 'bg-gray-200 text-gray-700'
+                    } hover:opacity-80 transition-opacity`}
+                    aria-label="Toggle theme"
+                  >
+                    {isDarkMode ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
+                  </button>
               
-              <button
-                onClick={() => {
-                  setIsLoggedIn(false);
-                  setUsername('');
-                  setPassword('');
-                }}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-600/80 text-white hover:bg-red-700 transition-colors"
-              >
-                <LogOut className="w-4 h-4" />
-                Déconnexion
-              </button>
-            </div>
+                  <button
+                    onClick={() => {
+                      setIsLoggedIn(false);
+                      setUsername('');
+                      setPassword('');
+                    }}
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-600/80 text-white hover:bg-red-700 transition-colors"
+                  >
+                    <LogOut className="w-5 h-5" />
+                    Déconnexion
+                  </button>
+                </div>
           </div>
         </div>
       </header>
@@ -377,7 +378,7 @@ const GTARPManager = () => {
             {/* MODULE COMPTABILITÉ */}
             {currentPage === 'comptabilite' && (
               <div className="space-y-6">
-                <div className={`p-8 rounded-2xl backdrop-blur-md ${
+                <div className={`p-8 rounded-2xl card ${
                   isDarkMode 
                     ? 'bg-gradient-to-br from-purple-900/30 to-blue-900/30 border border-purple-500/30 shadow-2xl shadow-purple-500/20'
                     : 'bg-gradient-to-br from-purple-100 to-blue-100 border border-purple-300 shadow-xl'
@@ -390,7 +391,7 @@ const GTARPManager = () => {
                   </p>
                 </div>
 
-                <div className={`p-6 rounded-2xl backdrop-blur-md ${
+                <div className={`p-6 rounded-2xl card ${
                   isDarkMode 
                     ? 'bg-gray-800/40 border border-gray-700/50'
                     : 'bg-white/60 border border-gray-300/50'
@@ -455,13 +456,13 @@ const GTARPManager = () => {
 
                   <button
                     onClick={ajouterTransaction}
-                    className="w-full py-3 rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold hover:from-purple-700 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-purple-500/50"
+                    className="btn-primary w-full"
                   >
                     Ajouter la transaction
                   </button>
                 </div>
 
-                <div className={`p-6 rounded-2xl backdrop-blur-md ${
+                <div className={`p-6 rounded-2xl card ${
                   isDarkMode 
                     ? 'bg-gray-800/40 border border-gray-700/50'
                     : 'bg-white/60 border border-gray-300/50'
@@ -558,7 +559,7 @@ const GTARPManager = () => {
 
                   <button
                     onClick={ajouterItem}
-                    className="w-full py-3 rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold hover:from-purple-700 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-purple-500/50"
+                    className="btn-primary w-full"
                   >
                     Ajouter à l'inventaire
                   </button>
@@ -568,7 +569,7 @@ const GTARPManager = () => {
                   {inventaire.map((item) => (
                     <div
                       key={item.id}
-                      className={`p-6 rounded-2xl backdrop-blur-md ${
+                      className={`p-6 rounded-2xl card ${
                         isDarkMode 
                           ? 'bg-gray-800/40 border border-gray-700/50 hover:border-purple-500/50'
                           : 'bg-white/60 border border-gray-300/50 hover:border-purple-500/50'
@@ -613,7 +614,7 @@ const GTARPManager = () => {
                             <h4 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                               {item.nom}
                             </h4>
-                            <Package className={`w-5 h-5 ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`} />
+                            <Package className={`w-6 h-6 ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`} />
                           </div>
                           
                           <div className="space-y-2 mb-4">
@@ -718,7 +719,7 @@ const GTARPManager = () => {
 
                   <button
                     onClick={ajouterClient}
-                    className="w-full py-3 rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold hover:from-purple-700 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-purple-500/50"
+                    className="btn-primary w-full"
                   >
                     Ajouter le client
                   </button>
@@ -728,7 +729,7 @@ const GTARPManager = () => {
                   {clients.map((client) => (
                     <div
                       key={client.id}
-                      className={`p-6 rounded-2xl backdrop-blur-md ${
+                      className={`p-6 rounded-2xl card ${
                         isDarkMode 
                           ? 'bg-gray-800/40 border border-gray-700/50 hover:border-blue-500/50'
                           : 'bg-white/60 border border-gray-300/50 hover:border-blue-500/50'
@@ -780,7 +781,7 @@ const GTARPManager = () => {
                                 {client.groupe}
                               </span>
                             </div>
-                            <Users className={`w-5 h-5 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
+                            <Users className={`w-6 h-6 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
                           </div>
                           
                           <div className={`mb-4 p-3 rounded-lg ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50'}`}>
