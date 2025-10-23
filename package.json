@@ -2,6 +2,9 @@
   "name": "gta-rp-manager",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "18.x"
+  },
   "dependencies": {
     "@supabase/supabase-js": "^2.76.1",
     "@testing-library/dom": "^9.3.4",
