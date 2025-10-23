@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { createClient } from '@supabase/supabase-js';
 import { DollarSign, Package, Users, Moon, Sun, LogOut, Save, History, Settings } from 'lucide-react';
 
 const GTARPManager = () => {
@@ -33,6 +35,41 @@ const GTARPManager = () => {
   ]);
   const [nouveauClient, setNouveauClient] = useState({ nom: '', groupe: '', business: '' });
   const [editingClient, setEditingClient] = useState(null);
+
+  // Supabase client (requires REACT_APP_SUPABASE_URL and REACT_APP_SUPABASE_KEY in Vercel env)
+  const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
+  const supabaseKey = process.env.REACT_APP_SUPABASE_KEY;
+  const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
+
+  // Discord webhook (client-side only if you understand the risks of exposing the webhook URL)
+  // Prefer storing webhook and calling a server-side endpoint to keep the webhook secret.
+  const envoyerDiscord = async (message) => {
+    const webhook = process.env.REACT_APP_DISCORD_WEBHOOK_URL;
+    if (!webhook) return;
+    try {
+      await axios.post(webhook, {
+        embeds: [{
+          title: 'Nouvelle transaction',
+          description: message,
+          color: 0x5865F2
+        }]
+      });
+    } catch (err) {
+      console.error('Erreur en envoyant le webhook Discord:', err);
+    }
+  };
+
+  // Google Sheets: you should call a server-side endpoint that uses googleapis to
+  // authenticate with a service account and append rows to a sheet. This client
+  // function is a placeholder which calls your server endpoint.
+  const sendToGoogleSheets = async (rowData) => {
+    try {
+      // Example: POST to your serverless function which will use googleapis
+      await axios.post(process.env.REACT_APP_GOOGLE_SHEETS_ENDPOINT || '/api/sheets', { row: rowData });
+    } catch (err) {
+      console.error('Erreur Google Sheets:', err);
+    }
+  };
 
   // Charger les données au démarrage
   useEffect(() => {
@@ -72,7 +109,7 @@ const GTARPManager = () => {
   };
 
   // Gestion comptabilité
-  const ajouterTransaction = () => {
+  const ajouterTransaction = async () => {
     if (!montant || !motif) {
       showNotification('Veuillez remplir tous les champs', 'error');
       return;
@@ -97,6 +134,24 @@ const GTARPManager = () => {
     setMontant('');
     setMotif('');
     showNotification(`Transaction ${typeTransaction === 'entree' ? 'ajoutée' : 'retirée'} avec succès`, 'success');
+
+    // Persist to Supabase if configured
+    if (supabase) {
+      try {
+        await supabase.from('transactions').insert([{
+          date: transaction.date,
+          type: transaction.type,
+          montant: transaction.montant,
+          motif: transaction.motif,
+          solde_apres: transaction.soldeApres
+        }]);
+      } catch (err) {
+        console.error('Erreur Supabase:', err);
+      }
+    }
+
+    // Send Discord webhook (if configured)
+    envoyerDiscord(`${typeTransaction === 'entree' ? '+' : '-'}${montantNum} — ${motif}`);
   };
 
   // Gestion inventaire
