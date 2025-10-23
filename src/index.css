@@ -189,6 +189,108 @@ textarea:focus {
   margin: 0 auto;
 }
 
+/* Modal pour le choix du fond d'écran */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal.active {
+  display: block;
+}
+
+.modal-content {
+  background: var(--dark-card-bg);
+  backdrop-filter: var(--glass-blur);
+  margin: 10% auto;
+  padding: 30px;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 600px;
+  border: 1px solid var(--dark-card-border);
+}
+
+.light-mode .modal-content {
+  background: var(--light-card-bg);
+  border: 1px solid var(--light-card-border);
+}
+
+.bg-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.bg-option {
+  height: 100px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 12px;
+  cursor: pointer;
+  border: 3px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.bg-option:hover {
+  transform: translateY(-2px);
+  border-color: #667eea;
+}
+
+.bg-option.selected {
+  border-color: #10b981;
+}
+
+/* Bouton refresh */
+.btn-refresh {
+  background: var(--dark-card-bg);
+  border: 1px solid var(--dark-card-border);
+  color: var(--dark-text);
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.light-mode .btn-refresh {
+  background: var(--light-card-bg);
+  border: 1px solid var(--light-card-border);
+  color: var(--light-text);
+}
+
+.btn-refresh:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.refresh-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Body with custom background */
+body.custom-bg {
+  background-size: cover !important;
+  background-position: center !important;
+  background-attachment: fixed !important;
+}
+
 /* Media queries */
 @media (max-width: 768px) {
   .main-content {
@@ -208,6 +310,16 @@ textarea:focus {
   .container {
     padding-left: 16px;
     padding-right: 16px;
+  }
+
+  .bg-options {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+
+  .modal-content {
+    margin: 5% auto;
+    padding: 20px;
+    width: 95%;
   }
 }
 

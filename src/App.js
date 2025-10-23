@@ -9,6 +9,17 @@ const GTARPManager = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [currentBg, setCurrentBg] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  
+  const bgImages = [
+    "https://i.goopics.net/b3oywx.jpg",
+    "https://i.goopics.net/m98p4e.jpg",
+    "https://i.goopics.net/bs1n2f.jpg",
+    "https://i.goopics.net/1st6ac.jpg",
+    "https://i.goopics.net/jflyi7.jpg"
+  ];
   
   // États pour la comptabilité
   const [solde, setSolde] = useState(50000);
@@ -74,9 +85,12 @@ const GTARPManager = () => {
     }
   };
 
-  // Charger les données au démarrage
+  // Charger les données et préférences au démarrage
   useEffect(() => {
     const savedData = localStorage.getItem('gtaRpData');
+    const savedTheme = localStorage.getItem('theme');
+    const savedBg = localStorage.getItem('bg');
+
     if (savedData) {
       const data = JSON.parse(savedData);
       setSolde(data.solde || 50000);
@@ -84,7 +98,51 @@ const GTARPManager = () => {
       setInventaire(prev => data.inventaire || prev);
       setClients(prev => data.clients || prev);
     }
+
+    if (savedTheme === 'light') {
+      setIsDarkMode(false);
+    }
+
+    if (savedBg) {
+      setCurrentBg(savedBg);
+      document.body.classList.add('custom-bg');
+      document.body.style.backgroundImage = `url('${savedBg}')`;
+    }
   }, []); // Vide car on veut juste charger au montage, et on utilise des updaters fonctionnels
+
+  // Fonction pour rafraîchir les données
+  const refreshData = async () => {
+    setIsRefreshing(true);
+    if (supabase) {
+      try {
+        const { data: transactions } = await supabase
+          .from('transactions')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (transactions) {
+          const newSolde = transactions.reduce((acc, trans) => 
+            acc + (trans.type === 'entree' ? trans.montant : -trans.montant), 0);
+          setSolde(newSolde);
+          setHistorique(transactions);
+        }
+      } catch (err) {
+        console.error('Erreur lors du rafraîchissement des données:', err);
+        showNotification('Erreur lors du rafraîchissement', 'error');
+      }
+    }
+    setIsRefreshing(false);
+    showNotification('Données rafraîchies avec succès', 'success');
+  };
+
+  // Fonction pour changer le fond d'écran
+  const selectBg = (img) => {
+    setCurrentBg(img);
+    document.body.style.backgroundImage = `url('${img}')`;
+    document.body.classList.add('custom-bg');
+    localStorage.setItem('bg', img);
+    setIsModalOpen(false);
+  };
 
   // Sauvegarder automatiquement
   useEffect(() => {
@@ -315,6 +373,14 @@ const GTARPManager = () => {
             
                 <div className="flex items-center gap-4">
                   <button
+                    onClick={refreshData}
+                    className={`btn-refresh ${isRefreshing ? 'opacity-50' : ''}`}
+                    disabled={isRefreshing}
+                  >
+                    <div className={`w-6 h-6 ${isRefreshing ? 'refresh-spin' : ''}`}>🔄</div>
+                  </button>
+
+                  <button
                     onClick={() => setIsDarkMode(!isDarkMode)}
                     className={`p-2 rounded-lg ${
                       isDarkMode ? 'bg-gray-700/50 text-gray-300' : 'bg-gray-200 text-gray-700'
@@ -322,6 +388,15 @@ const GTARPManager = () => {
                     aria-label="Toggle theme"
                   >
                     {isDarkMode ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
+                  </button>
+
+                  <button
+                    onClick={() => setIsModalOpen(true)}
+                    className={`p-2 rounded-lg ${
+                      isDarkMode ? 'bg-gray-700/50 text-gray-300' : 'bg-gray-200 text-gray-700'
+                    } hover:opacity-80 transition-opacity`}
+                  >
+                    🖼️
                   </button>
               
                   <button
@@ -831,6 +906,35 @@ const GTARPManager = () => {
           </div>
         </main>
       </div>
+
+      {/* Modal de sélection du fond d'écran */}
+      {isModalOpen && (
+        <div className="modal active">
+          <div className="modal-content">
+            <h2 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              Choisir un fond d'écran
+            </h2>
+            
+            <div className="bg-options">
+              {bgImages.map((img, index) => (
+                <div
+                  key={index}
+                  className={`bg-option ${currentBg === img ? 'selected' : ''}`}
+                  style={{ backgroundImage: `url('${img}')` }}
+                  onClick={() => selectBg(img)}
+                />
+              ))}
+            </div>
+            
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="btn-primary mt-4"
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Footer avec informations */}
       <footer className={`mt-8 py-4 backdrop-blur-md ${
